@@ -38,6 +38,7 @@ metadata:
 | `scripts/scope-detector.ts` | Monorepo 结构检测、scope 推导 |
 | `scripts/convention-detector.ts` | 项目 commit 规范检测（commitlint / commitizen / git history） |
 | `scripts/splitter.ts` | 按功能维度拆分变更 |
+| `scripts/extend-generator.ts` | EXTEND.md 解析、生成、合并（`--init` 命令支持） |
 
 ## Preferences (EXTEND.md)
 
@@ -57,10 +58,13 @@ test -f "$HOME/.panda-skills/panda-git-commit/EXTEND.md" && echo "user"
 
 | Result | Action |
 |--------|--------|
-| 找到 | 读取、解析、应用配置 |
-| 未找到 | 使用默认配置，所有设置自动推断 |
+| 找到（含 Convention 区块） | 直接读取缓存，跳过 convention/monorepo 检测脚本 |
+| 找到（无 Convention 区块） | 读取已有设置，仍运行检测脚本补充缺失信息 |
+| 未找到 | 运行全部检测脚本，提示用户执行 `--init` 缓存结果 |
 
-**EXTEND.md 支持的配置**：语言 | subject 最大长度 | body 换行宽度 | emoji 开关 | 自定义 type | scope 映射 | scope 别名 | 消息模板
+**自动生成**：运行 `--init` 可自动检测项目信息并生成 EXTEND.md（写入项目级路径）。`--init` 只补充缺失区块，不覆盖用户手动配置；`--refresh` 强制重新检测并覆盖。
+
+**EXTEND.md 支持的配置**：语言 | subject 最大长度 | body 换行宽度 | emoji 开关 | 项目规范缓存 | 自定义 type | scope 映射 | scope 别名 | 消息模板
 
 详细格式：[references/extend-schema.md](references/extend-schema.md)
 
@@ -83,6 +87,8 @@ test -f "$HOME/.panda-skills/panda-git-commit/EXTEND.md" && echo "user"
 
 | Option | Description |
 |--------|-------------|
+| `--init` | 检测项目信息并生成 EXTEND.md，缓存语言/规范/scope 映射 |
+| `--refresh` | 强制重新检测并覆盖 EXTEND.md 中的所有检测结果 |
 | `--split` | 强制分析并建议将变更拆分为多个 commit |
 | `--scope <scope>` | 手动指定 scope，跳过自动检测 |
 | `--type <type>` | 手动指定 commit type |
@@ -93,15 +99,34 @@ test -f "$HOME/.panda-skills/panda-git-commit/EXTEND.md" && echo "user"
 
 ## Workflow
 
+### Step 0: --init / --refresh 模式
+
+如果用户传入 `--init` 或 `--refresh`：
+
+1. 运行所有检测脚本（语言、规范、monorepo）
+2. 生成 EXTEND.md 写入 `.panda-skills/panda-git-commit/EXTEND.md`
+3. `--init`：只补充缺失区块，不覆盖用户手动配置
+4. `--refresh`：强制重新检测并覆盖所有检测结果
+5. 输出摘要后退出，不进入 commit 流程
+
 ### Step 1: 加载配置
 
 1.1 检查 EXTEND.md（见 Preferences 章节）
 
-1.2 合并配置优先级：CLI 参数 > EXTEND.md > 自动检测 > 默认值
+1.2 **缓存判断**：如果 EXTEND.md 存在且包含 `## Convention` 区块：
+- 直接从 EXTEND.md 读取语言、规范、scope 映射
+- **跳过 Step 2、3、4** 的检测脚本执行
+- 仅运行 `analyzeDiff()`（Step 5，每次必须执行）
 
-### Step 2: 检测 Commit 语言
+1.3 如果 EXTEND.md 不存在或缺少 Convention 区块：
+- 运行全部检测脚本（Step 2、3、4）
+- 在输出中附带提示：「运行 /panda-git-commit --init 可缓存项目配置」
 
-语言无需手动设置，自动从 git history 推断。
+1.4 合并配置优先级：CLI 参数 > EXTEND.md > 自动检测 > 默认值
+
+### Step 2: 检测 Commit 语言（可由缓存跳过）
+
+语言无需手动设置，自动从 git history 推断。**若 EXTEND.md 已缓存 language 设置，跳过本步骤。**
 
 **检测逻辑**（`scripts/analyzer.ts`）：
 
@@ -121,7 +146,9 @@ test -f "$HOME/.panda-skills/panda-git-commit/EXTEND.md" && echo "user"
 3. git log 自动检测 — 零配置自动适配
 4. 兜底默认值 — `en`
 
-### Step 3: 检测项目 Commit 规范
+### Step 3: 检测项目 Commit 规范（可由缓存跳过）
+
+**若 EXTEND.md 已缓存 Convention 区块，跳过本步骤，直接使用缓存值。**
 
 运行 `${BUN_X} {baseDir}/scripts/convention-detector.ts` 检测项目规范。
 
@@ -173,7 +200,9 @@ AI agent 在生成 commit message 时：
 - **应当**遵循 `bestPractices` 中的建议（不与 rules 冲突时）
 - 如果 `format` 不是 `conventional-commits`（如 `jira-prefix`），按检测到的格式生成
 
-### Step 4: 检测仓库结构
+### Step 4: 检测仓库结构（可由缓存跳过）
+
+**若 EXTEND.md 已缓存 Scope Mapping 区块，跳过本步骤，直接使用缓存的映射。**
 
 运行 `${BUN_X} {baseDir}/scripts/scope-detector.ts` 检测项目结构。
 

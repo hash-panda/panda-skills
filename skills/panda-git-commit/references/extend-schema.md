@@ -12,6 +12,12 @@ EXTEND.md 文件用于自定义 panda-git-commit 的行为。使用 Markdown 格
 
 优先级：项目级 > XDG > 用户级。
 
+## 自动生成
+
+运行 `/panda-git-commit --init` 可自动检测项目信息并生成 EXTEND.md，后续运行将直接读取缓存，跳过重复检测。使用 `--refresh` 可强制重新检测并覆盖。
+
+自动生成的内容包括：Settings（语言）、Convention（规范检测结果）、Scope Mapping（monorepo 子包映射）。用户手动编辑的区块在 `--init` 时不会被覆盖（仅补充缺失区块）。
+
 ## 完整示例
 
 ```markdown
@@ -21,6 +27,14 @@ EXTEND.md 文件用于自定义 panda-git-commit 的行为。使用 Markdown 格
 - max_subject_length: 72
 - body_wrap: 80
 - emoji: false
+
+## Convention
+
+- source: commitlint
+- format: conventional-commits
+- types: feat, fix, docs, style, refactor, perf, test, chore, ci, build
+- scope_required: false
+- subject_max_length: 100
 
 ## Custom Types
 
@@ -70,6 +84,23 @@ fix({scope}): {emoji}{description}
 | `max_subject_length` | number  | `72`    | subject 行最大字符数                                                                  |
 | `body_wrap`          | number  | `80`    | body 自动换行宽度                                                                     |
 | `emoji`              | boolean | `false` | 是否在 type 前添加 emoji                                                              |
+
+### Convention
+
+项目 commit 规范缓存，格式为 `- key: value`。通常由 `--init` 自动生成，也可手动编写。
+
+当此区块存在时，运行 `/panda-git-commit` 将跳过 `convention-detector.ts` 和 `scope-detector.ts` 的执行，直接使用缓存值。
+
+| Key                   | Type    | Description                                                                  |
+| --------------------- | ------- | ---------------------------------------------------------------------------- |
+| `source`              | string  | 规范来源：`commitlint` / `commitizen` / `git-hooks` / `git-history` / `default` |
+| `format`              | string  | 格式：`conventional-commits` / `angular` / `emoji-prefix` / `jira-prefix` / `free-form` |
+| `types`               | string  | 允许的 type 列表，逗号分隔                                                  |
+| `scope_required`      | boolean | scope 是否必填                                                               |
+| `scope_enum`          | string  | 允许的 scope 列表，逗号分隔                                                 |
+| `subject_max_length`  | number  | subject 行最大字符数                                                         |
+| `subject_case`        | string  | subject 大小写规则（如 `lower-case`）                                        |
+| `body_max_line_length`| number  | body 每行最大字符数                                                          |
 
 ### Custom Types
 

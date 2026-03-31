@@ -68,6 +68,36 @@ cp -r panda-skills/skills/panda-git-commit ~/.claude/skills/
 cp -r panda-skills/skills/panda-git-commit ~/.codex/skills/
 ```
 
+## 更新
+
+技能有新版本时，按你的安装方式重新执行对应命令即可：
+
+| 安装方式 | 更新命令 |
+| --- | --- |
+| npx skills | `npx skills add hash-panda/panda-skills`（重新运行即覆盖） |
+| Claude Code Plugin | `/plugin install panda-skills@panda-skills`（重新安装） |
+| ClawHub | `clawhub update panda-git-commit` |
+| 手动安装 | 重新拉取并复制（见下方） |
+
+手动更新：
+
+```bash
+cd panda-skills && git pull
+
+# Cursor
+cp -r skills/panda-git-commit ~/.cursor/skills/
+
+# Claude Code
+cp -r skills/panda-git-commit ~/.claude/skills/
+
+# Codex
+cp -r skills/panda-git-commit ~/.codex/skills/
+```
+
+或直接告诉 AI Agent：
+
+> 请从 github.com/hash-panda/panda-skills 更新 panda-git-commit 技能
+
 ## Available Skills
 
 ### Git Skills
@@ -77,6 +107,9 @@ cp -r panda-skills/skills/panda-git-commit ~/.codex/skills/
 智能 Git Commit Message 生成器，遵循 [Conventional Commits](https://www.conventionalcommits.org/) 规范。
 
 ```bash
+# 首次使用：初始化项目配置（检测语言/规范/monorepo，缓存到 EXTEND.md）
+/panda-git-commit --init
+
 # 分析 staged 变更，生成 commit message
 /panda-git-commit
 
@@ -98,8 +131,8 @@ cp -r panda-skills/skills/panda-git-commit ~/.codex/skills/
 # 在 type 前添加 emoji
 /panda-git-commit --emoji
 
-# 输出包含原始 diff 内容
-/panda-git-commit --with-diff
+# 项目配置变更后，刷新缓存
+/panda-git-commit --refresh
 ```
 
 **核心功能**：
@@ -110,6 +143,7 @@ cp -r panda-skills/skills/panda-git-commit ~/.codex/skills/
 | Monorepo Support     | 自动检测 workspace packages，读取 `package.json` name 作为 scope |
 | Smart Splitting      | 建议将不相关的变更拆分为独立 commit               |
 | Language Auto-detect | 分析 git history 自动匹配团队的 commit 语言习惯   |
+| Project Cache        | `--init` 缓存项目配置到 EXTEND.md，后续跳过重复检测 |
 | Customizable         | 通过 EXTEND.md 自定义 types、scope 映射、模板     |
 
 **Monorepo Scope 检测**：
