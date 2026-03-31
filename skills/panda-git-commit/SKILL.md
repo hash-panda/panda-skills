@@ -5,7 +5,7 @@ description: >-
   自动检测 monorepo scope，支持将变更按功能拆分为多个 commit。
   触发词："commit"、"提交"、"生成 commit message"、"拆分提交"、
   "split commits"、"git commit"。
-version: 1.0.0
+version: 1.0.2
 metadata:
   openclaw:
     homepage: https://github.com/hash-panda/panda-skills#panda-git-commit

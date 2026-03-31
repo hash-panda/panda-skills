@@ -132,6 +132,22 @@ bump_version() {
   esac
 }
 
+update_skill_version() {
+  local skill_dir="$1"
+  local new_version="$2"
+  local skill_md="$skill_dir/SKILL.md"
+
+  if [[ ! -f "$skill_md" ]]; then
+    return 1
+  fi
+
+  if sed -i '' "s/^version:[[:space:]]*[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*.*/version: $new_version/" "$skill_md" 2>/dev/null; then
+    log "已更新 SKILL.md 版本号: $new_version"
+  else
+    warn "未能自动更新 SKILL.md 版本号，请手动修改为 $new_version"
+  fi
+}
+
 publish_skill() {
   local skill_dir="$1"
   local skill_name="$2"
@@ -176,6 +192,8 @@ publish_skill() {
   log "发布 $skill_name@$version (base: $base_version, bump: $bump)"
   CLAWHUB_TOKEN="$CLAWHUB_TOKEN" "${cmd[@]}"
   log "发布成功: $skill_name@$version"
+
+  update_skill_version "$skill_dir" "$version"
 }
 
 sync_all() {
