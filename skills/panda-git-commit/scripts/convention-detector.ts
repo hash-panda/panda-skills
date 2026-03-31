@@ -268,7 +268,7 @@ async function analyzeHistory(): Promise<{ pattern: HistoryPattern; rules: Conve
   }
 }
 
-function computeBestPractices(
+export function computeBestPractices(
   source: ConventionResult["source"],
   rules: ConventionRule
 ): string[] {
