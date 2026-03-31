@@ -1,0 +1,21 @@
+{
+  "name": "panda-skills",
+  "owner": {
+    "name": "hash-panda"
+  },
+  "metadata": {
+    "description": "日常开发中可复用的 Agent Skills，包含智能 Git Commit Message 生成等技能",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "panda-skills",
+      "description": "智能 Git Commit Message 生成，支持 Conventional Commits、Monorepo scope 检测、变更拆分",
+      "source": "./",
+      "strict": true,
+      "skills": [
+        "./skills/panda-git-commit"
+      ]
+    }
+  ]
+}

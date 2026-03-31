@@ -1,0 +1,8 @@
+{
+  "name": "panda-skills",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test ./skills/*/scripts/*.test.ts"
+  }
+}
