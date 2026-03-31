@@ -51,7 +51,7 @@ clawhub install panda-git-commit
 
 直接告诉 AI Agent：
 
-> 请从 github.com/hash-panda/panda-skills 安装 panda-git-commit 技能
+> 请从 https://github.com/hash-panda/panda-skills 安装 panda-git-commit 技能
 
 ### 手动安装
 
