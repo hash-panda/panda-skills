@@ -10,11 +10,12 @@
   "plugins": [
     {
       "name": "panda-skills",
-      "description": "智能 Git Commit Message 生成，支持 Conventional Commits、Monorepo scope 检测、变更拆分",
+      "description": "日常开发中可复用的 Agent Skills：智能 Git Commit Message 生成、文章智能配图（含角色融合）",
       "source": "./",
       "strict": true,
       "skills": [
-        "./skills/panda-git-commit"
+        "./skills/panda-git-commit",
+        "./skills/panda-article-illustrator"
       ]
     }
   ]
