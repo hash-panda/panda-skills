@@ -1,0 +1,196 @@
+TAP version 13
+# Subtest: accepts a new event
+ok 1 - accepts a new event
+  ---
+  duration_ms: 0.992359
+  type: 'test'
+  ...
+# Subtest: rejects empty payload
+ok 2 - rejects empty payload
+  ---
+  duration_ms: 0.23184
+  type: 'test'
+  ...
+# Subtest: returns the first job on redelivery and preserves its payload
+ok 3 - returns the first job on redelivery and preserves its payload
+  ---
+  duration_ms: 0.659656
+  type: 'test'
+  ...
+# Subtest: allows the same eventId in different tenants
+ok 4 - allows the same eventId in different tenants
+  ---
+  duration_ms: 0.886709
+  type: 'test'
+  ...
+# Subtest: keeps different events in one tenant independent
+ok 5 - keeps different events in one tenant independent
+  ---
+  duration_ms: 0.136926
+  type: 'test'
+  ...
+# Subtest: does not conflate tenant and event pairs containing delimiters
+ok 6 - does not conflate tenant and event pairs containing delimiters
+  ---
+  duration_ms: 0.113701
+  type: 'test'
+  ...
+# Subtest: keeps deduplication local to each queue instance
+ok 7 - keeps deduplication local to each queue instance
+  ---
+  duration_ms: 0.126251
+  type: 'test'
+  ...
+# Subtest: rejects empty string tenantId without changing the queue
+ok 8 - rejects empty string tenantId without changing the queue
+  ---
+  duration_ms: 0.36425
+  type: 'test'
+  ...
+# Subtest: rejects whitespace tenantId without changing the queue
+ok 9 - rejects whitespace tenantId without changing the queue
+  ---
+  duration_ms: 0.142345
+  type: 'test'
+  ...
+# Subtest: rejects undefined tenantId without changing the queue
+ok 10 - rejects undefined tenantId without changing the queue
+  ---
+  duration_ms: 0.162215
+  type: 'test'
+  ...
+# Subtest: rejects null tenantId without changing the queue
+ok 11 - rejects null tenantId without changing the queue
+  ---
+  duration_ms: 0.164368
+  type: 'test'
+  ...
+# Subtest: rejects number tenantId without changing the queue
+ok 12 - rejects number tenantId without changing the queue
+  ---
+  duration_ms: 0.119601
+  type: 'test'
+  ...
+# Subtest: rejects boolean tenantId without changing the queue
+ok 13 - rejects boolean tenantId without changing the queue
+  ---
+  duration_ms: 0.100471
+  type: 'test'
+  ...
+# Subtest: rejects object tenantId without changing the queue
+ok 14 - rejects object tenantId without changing the queue
+  ---
+  duration_ms: 0.102946
+  type: 'test'
+  ...
+# Subtest: rejects array tenantId without changing the queue
+ok 15 - rejects array tenantId without changing the queue
+  ---
+  duration_ms: 0.061343
+  type: 'test'
+  ...
+# Subtest: rejects empty string eventId without changing the queue
+ok 16 - rejects empty string eventId without changing the queue
+  ---
+  duration_ms: 0.12562
+  type: 'test'
+  ...
+# Subtest: rejects whitespace eventId without changing the queue
+ok 17 - rejects whitespace eventId without changing the queue
+  ---
+  duration_ms: 0.082605
+  type: 'test'
+  ...
+# Subtest: rejects undefined eventId without changing the queue
+ok 18 - rejects undefined eventId without changing the queue
+  ---
+  duration_ms: 0.056865
+  type: 'test'
+  ...
+# Subtest: rejects null eventId without changing the queue
+ok 19 - rejects null eventId without changing the queue
+  ---
+  duration_ms: 0.050417
+  type: 'test'
+  ...
+# Subtest: rejects number eventId without changing the queue
+ok 20 - rejects number eventId without changing the queue
+  ---
+  duration_ms: 0.0525
+  type: 'test'
+  ...
+# Subtest: rejects boolean eventId without changing the queue
+ok 21 - rejects boolean eventId without changing the queue
+  ---
+  duration_ms: 0.051147
+  type: 'test'
+  ...
+# Subtest: rejects object eventId without changing the queue
+ok 22 - rejects object eventId without changing the queue
+  ---
+  duration_ms: 0.052419
+  type: 'test'
+  ...
+# Subtest: rejects array eventId without changing the queue
+ok 23 - rejects array eventId without changing the queue
+  ---
+  duration_ms: 0.07906
+  type: 'test'
+  ...
+# Subtest: rejects empty string payload without changing the queue
+ok 24 - rejects empty string payload without changing the queue
+  ---
+  duration_ms: 0.086881
+  type: 'test'
+  ...
+# Subtest: rejects whitespace payload without changing the queue
+ok 25 - rejects whitespace payload without changing the queue
+  ---
+  duration_ms: 0.290339
+  type: 'test'
+  ...
+# Subtest: rejects undefined payload without changing the queue
+ok 26 - rejects undefined payload without changing the queue
+  ---
+  duration_ms: 0.064117
+  type: 'test'
+  ...
+# Subtest: rejects null payload without changing the queue
+ok 27 - rejects null payload without changing the queue
+  ---
+  duration_ms: 0.054122
+  type: 'test'
+  ...
+# Subtest: rejects number payload without changing the queue
+ok 28 - rejects number payload without changing the queue
+  ---
+  duration_ms: 0.082594
+  type: 'test'
+  ...
+# Subtest: rejects boolean payload without changing the queue
+ok 29 - rejects boolean payload without changing the queue
+  ---
+  duration_ms: 0.058007
+  type: 'test'
+  ...
+# Subtest: rejects object payload without changing the queue
+ok 30 - rejects object payload without changing the queue
+  ---
+  duration_ms: 0.049625
+  type: 'test'
+  ...
+# Subtest: rejects array payload without changing the queue
+ok 31 - rejects array payload without changing the queue
+  ---
+  duration_ms: 0.047261
+  type: 'test'
+  ...
+1..31
+# tests 31
+# suites 0
+# pass 31
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 119.582899

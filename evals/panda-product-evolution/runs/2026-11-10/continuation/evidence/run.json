@@ -1,0 +1,68 @@
+{
+  "experiment": "queue-restart-boundary-2026-11-10",
+  "startedAt": "2026-11-10T06:21:49.165377+00:00",
+  "cwd": "/workspace/scratch/c48d27807e4d/panda-skills/evals/panda-product-evolution/runs/2026-11-10/continuation",
+  "nodeVersion": "v24.22.1",
+  "sourceHashesBefore": {
+    "README.md": "fc2378436fe4b40634370b127ec3636d49844373c2f52533a32a6b58d79bf2ca",
+    "experiment.md": "3b664a2b886208edb0bacefa4684148f8a83f70c19bc7d5f825980660f0703b8",
+    "queue.ts": "68fec0d50a281765538729ee9e3cfc7aa12ea46dde8b85bbbdec29a4ecb5aece",
+    "queue.test.ts": "3aca7b399ffc2b812952d1ee837a772f65e162ee5526d070ed81dd6b83ce1777"
+  },
+  "runs": [
+    {
+      "label": "historical-scope",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "../execution/queue.test.ts"
+      ],
+      "startedAt": "2026-11-10T06:21:49.169899+00:00",
+      "completedAt": "2026-11-10T06:21:49.369127+00:00",
+      "exitCode": 0,
+      "timeout": false,
+      "totals": {
+        "tests": 31,
+        "pass": 31,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "stdout": "evidence/historical-scope.tap",
+      "stderr": "evidence/historical-scope.stderr"
+    },
+    {
+      "label": "restart-repro",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "restart-repro.test.ts"
+      ],
+      "startedAt": "2026-11-10T06:21:49.369182+00:00",
+      "completedAt": "2026-11-10T06:21:49.783225+00:00",
+      "exitCode": 1,
+      "timeout": false,
+      "totals": {
+        "tests": 2,
+        "pass": 1,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "stdout": "evidence/restart-repro.tap",
+      "stderr": "evidence/restart-repro.stderr"
+    }
+  ],
+  "sourceHashesAfter": {
+    "README.md": "fc2378436fe4b40634370b127ec3636d49844373c2f52533a32a6b58d79bf2ca",
+    "experiment.md": "3b664a2b886208edb0bacefa4684148f8a83f70c19bc7d5f825980660f0703b8",
+    "queue.ts": "68fec0d50a281765538729ee9e3cfc7aa12ea46dde8b85bbbdec29a4ecb5aece",
+    "queue.test.ts": "3aca7b399ffc2b812952d1ee837a772f65e162ee5526d070ed81dd6b83ce1777"
+  },
+  "sourceUnchanged": true,
+  "completedAt": "2026-11-10T06:21:49.783369+00:00"
+}

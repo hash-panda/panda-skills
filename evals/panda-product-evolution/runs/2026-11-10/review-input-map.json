@@ -1,0 +1,10 @@
+{
+  "X": {
+    "file": "with-skill.md",
+    "sha256": "a3924c7885b5182f481042806d9e06336d0bb4534b502493edcae806aa2d205e"
+  },
+  "Y": {
+    "file": "baseline.md",
+    "sha256": "07c7fb0e1309488c15a1c2edaa6dc33f8e010aa681a795c0f7aa6ab02e7b424f"
+  }
+}

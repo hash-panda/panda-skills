@@ -1,22 +1,17 @@
 # 多平台适配说明
 
-panda-skills 采用「SKILL.md + TypeScript 脚本」的架构，天然兼容所有支持 SKILL.md 格式的 AI 编码平台。
+panda-skills 采用「SKILL.md + 按需添加的资源」结构，供支持技能指令的 AI Agent 使用。技能可包含工具脚本，也可以完全由指令、参考文档和模板组成；具体工具与权限由运行平台提供。
 
 ## 架构原理
 
-```text
-SKILL.md（平台无关的指令文档）
-    ├── 由 AI agent 读取并理解
-    ├── 定义工作流、触发词、参数
-    └── 引用 scripts/ 中的 TypeScript 工具
+| 组成 | 用途 | 是否必需 |
+| --- | --- | --- |
+| `SKILL.md` | 声明名称与触发场景，提供执行方法 | 必需 |
+| `references/`、`assets/` | 按需读取的参考内容与可复用模板 | 可选 |
+| `scripts/` | 需要确定性执行的工具逻辑；现有 TypeScript 工具通过 Bun 运行 | 可选 |
+| `agents/` | 平台支持的技能界面元数据 | 可选 |
 
-scripts/*.ts（平台无关的 CLI 工具）
-    ├── 通过 Bun 运行（无需构建）
-    ├── 输出 JSON 结构化数据
-    └── AI agent 解析输出并生成 commit message
-```
-
-核心逻辑在 TypeScript 脚本中，AI agent 负责理解 SKILL.md 指令、调用脚本、根据输出生成 commit message 并与用户交互。所有平台共享同一套代码。
+例如，`panda-git-commit` 使用 TypeScript 脚本分析变更，Agent 根据输出生成 commit message；`panda-product-evolution` 由 Agent 读取指令与模板，调用项目已有工具完成改进回合，本身无需 Node.js 或 Bun。使用 `npx skills` 安装器仍需要 Node.js / npm，这与技能运行依赖分开计算。
 
 ## 各平台适配方式
 
@@ -77,7 +72,7 @@ cp -r skills/panda-git-commit ~/.codex/skills/
 
 ### Zhipu / 智谱
 
-**安装方式**：通过 TypeScript CLI 脚本直接使用。
+**含脚本技能的使用方式**：通过 TypeScript CLI 脚本调用其工具能力。
 
 ```bash
 # 分析 git 变更
@@ -87,15 +82,24 @@ bun skills/panda-git-commit/scripts/main.ts
 bun skills/panda-git-commit/scripts/main.ts --split --lang zh
 ```
 
-脚本输出 JSON 格式的结构化数据，可被任何 AI agent 或工具链消费。
+上述 Git 技能脚本输出 JSON 格式的结构化数据，可供 AI Agent 或工具链读取。纯指令技能应由 Agent 加载 `SKILL.md` 及其引用资源；`panda-product-evolution` 没有 CLI 脚本入口。
 
 ### 其他平台
 
-任何支持以下能力的 AI 编码平台都可以使用：
+接入其他平台时，按技能的实际任务确认能力：
 
-1. **读取 Markdown 文件** — 理解 SKILL.md 中的工作流指令
-2. **执行 Shell 命令** — 运行 `bun scripts/main.ts` 获取分析结果
-3. **与用户交互** — 展示 commit message 并等待确认
+1. **读取 Markdown 与配套资源** — 加载 `SKILL.md` 的工作流和所需参考资料。
+2. **提供任务工具** — 按需要开放文件、仓库、测试或其他工具；只有含脚本的技能才需要相应脚本运行时。
+3. **提供授权与结果交付机制** — 在用户已有授权内执行，展示真实结果和证据；平台未提供的能力不能由 Skill 自动补齐。
+
+`panda-product-evolution` 可按以下方式调用：
+
+```text
+使用 panda-product-evolution，读取项目目标、最新基线与上轮记录，
+在本轮预算及已有授权内实施并验证一个改进，保存可恢复的实验记录。
+```
+
+持久记录和周期触发需要平台或项目已有工作流支持。安装技能本身不创建后台调度任务，也不证明跨会话记忆或业务收益已生效。
 
 ## npx skills add 一键安装
 
@@ -107,6 +111,9 @@ npx skills add hash-panda/panda-skills
 
 # 只安装指定技能
 npx skills add hash-panda/panda-skills --skill panda-git-commit
+
+# 安装纯指令的产品与系统改进技能
+npx skills add hash-panda/panda-skills --skill panda-product-evolution
 
 # 查看可用技能
 npx skills add hash-panda/panda-skills --list
@@ -125,14 +132,13 @@ ClawHub 按单个技能独立发布和安装：
 clawhub install panda-git-commit
 ```
 
+`panda-product-evolution` 本次通过 Git 仓库与 Plugin Marketplace 集成，不能据此推定它已发布到 ClawHub。当前发布脚本从旧技能的顶层 `version` 读取独立版本；新技能采用 `name` / `description` 的可移植元数据，集合版本在 Marketplace 清单中管理。在适配独立发布版本来源前，不使用下面的脚本发布此新技能，也不使用 `--all` 将其纳入批量发布。
+
 发布通过 `scripts/sync-clawhub.sh` 脚本完成（需维护者操作）：
 
 ```bash
 # 发布单个技能（--allow-cjk 允许中文内容）
 bash scripts/sync-clawhub.sh --skill panda-git-commit --changelog "修复 monorepo scope 检测" --allow-cjk
-
-# 发布所有技能
-bash scripts/sync-clawhub.sh --all --bump patch --allow-cjk
 
 # 预览模式（不实际发布）
 bash scripts/sync-clawhub.sh --skill panda-git-commit --dry-run --allow-cjk

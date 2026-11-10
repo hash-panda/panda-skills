@@ -1,0 +1,56 @@
+✖ one task for repeated tenant/event identity (1.638386ms)
+✔ identical event IDs in different tenants are independent (0.17215ms)
+✔ different event IDs in one tenant are independent (0.165781ms)
+✔ invalid payload does not reserve an identity (0.387856ms)
+✔ identity does not collide on separator characters (0.120202ms)
+✖ replay preserves the original accepted payload (0.219572ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 4
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 123.363464
+
+✖ failing tests:
+
+test at evals/panda-product-evolution/checks/queue-contract.test.mjs:9:1
+✖ one task for repeated tenant/event identity (1.638386ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  2 !== 1
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/c48d27807e4d/panda-skills/evals/panda-product-evolution/checks/queue-contract.test.mjs:13:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 2,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at evals/panda-product-evolution/checks/queue-contract.test.mjs:47:1
+✖ replay preserves the original accepted payload (0.219572ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  2 !== 1
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/c48d27807e4d/panda-skills/evals/panda-product-evolution/checks/queue-contract.test.mjs:51:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 2,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -4,8 +4,9 @@
 
 ## 前置要求
 
-- 已安装 Node.js 环境
-- 能够运行 `npx bun` 命令
+- 使用能够读取 `SKILL.md` 的 AI Agent，并按具体任务提供文件、测试或其他工具的访问能力。
+- 使用下方 `npx skills` 安装方式时，需要 Node.js / npm；手动复制技能不依赖此安装器。
+- 运行依赖按技能区分：`panda-git-commit` 的 TypeScript 脚本需要 Bun（或 `npx bun`）；`panda-product-evolution` 是纯指令技能，本身不需要 Node.js 或 Bun。被改进项目的构建、测试依赖仍按项目要求准备。
 
 ## 安装
 
@@ -100,6 +101,54 @@ cp -r skills/panda-git-commit ~/.codex/skills/
 
 ## Available Skills
 
+### 产品与系统改进
+
+#### panda-product-evolution
+
+以证据驱动产品、系统与 Agent 的持续改进。每轮从目标和基线出发，选择值得解决的问题，实施最小有效改变，再用可比较的结果判断是否保留。
+
+**核心机制**：
+
+| 机制 | 关注的问题 | 典型动作 |
+| --- | --- | --- |
+| 执行改进 | 在现有目标和机制下，怎样更可靠、更快或更省？ | 修复缺陷、改善上下文、优化工具调用、减少重复工作 |
+| 结构改进 | 产品流程、架构和资源分配的假设是否仍然成立？ | 简化产品路径、替换方案、调整模块边界、删除低价值能力 |
+| 跨轮学习 | 本轮经验怎样改善后续诊断、选题和验证？ | 保留失败实验、记录适用条件、在新任务上验证方法变化 |
+
+回路选择依据是否需要改变既有假设或机制，不按改动规模划分。允许补证据、继续观察或保持现状；不要求每轮重构或新增功能。实验先确定基线、验收标准、质量约束、成本和停止条件，再根据实际结果报告成立、未成立、待观察或无需变更。
+
+**安装**：
+
+```bash
+npx skills add hash-panda/panda-skills --skill panda-product-evolution
+```
+
+也可通过上面的 Claude Code Plugin Marketplace 安装整个集合，或将 `skills/panda-product-evolution/` 完整复制到所用 Agent 的技能目录。
+
+**调用示例**：在已安装技能的 Agent 中直接提出任务。
+
+```text
+使用 panda-product-evolution，评审这个产品的目标、基线和最近改动。
+比较局部优化与结构改进，给出一个可证伪的最小实验。
+```
+
+```text
+使用 panda-product-evolution，读取项目配置与上轮实验记录，完成一轮改进。
+本轮已授权修改代码并运行本地测试，预算 60 分钟。
+在授权范围内实施、验证并保存结果；业务数据不足时标为待观察。
+```
+
+**项目配置与模板**：
+
+- 项目配置位置：`.panda-skills/panda-product-evolution/EXTEND.md`。可从[项目配置模板](skills/panda-product-evolution/assets/project-profile.template.md)填写目标、指标、质量约束、预算、已有授权和证据位置。
+- 使用[实验记录模板](skills/panda-product-evolution/assets/experiment.template.md)保存假设、版本、结果与下轮动作；已有等价记录可直接复用。
+- [评估协议](skills/panda-product-evolution/references/evaluation.md)说明比较条件、质量与成本权衡；[工作流与跨轮学习](skills/panda-product-evolution/references/operation.md)说明如何接入既有任务和恢复历史实验。
+- 配置依次采用当前请求与已有明确授权、项目配置、XDG 配置和用户默认配置；低优先级只补齐缺项。缺少配置文件时从上下文提取已知信息，不因缺文件停止工作。
+
+**运行范围**：这是一次改进回合的方法，不是后台调度器。安装后不会自动建立周期任务、获得项目权限或在会话结束后持续执行；周期运行需要接入已有调度或工作流。它不保证 ROI、增长或盈利，也不把自动改代码等同于已实现 RSI。技术验证与真实业务效果分别记录，结论以实际证据为准。
+
+**验证记录**：[2026-11-10 评估报告](evals/panda-product-evolution/report-2026-11-10.md)包含四个决策场景的有无 Skill 对照、实际代码修复、独立行为测试，以及安装后新会话的第二轮接续。两组决策表现接近；报告保留了已验证能力、额外开销与尚未证明的效果。[复查方法与原始材料](evals/panda-product-evolution/README.md)可用于后续回归。
+
 ### Git Skills
 
 #### panda-git-commit
@@ -172,6 +221,7 @@ Commit message 语言从 git history 中自动推断，零配置即可用。优�
 | Path                                     | Scope      |
 | ---------------------------------------- | ---------- |
 | `.panda-skills/<skill-name>/EXTEND.md`   | 项目级配置 |
+| `$XDG_CONFIG_HOME/panda-skills/<skill-name>/EXTEND.md` | XDG 用户配置（默认目录规则见各技能说明） |
 | `~/.panda-skills/<skill-name>/EXTEND.md` | 用户级配置 |
 
 ## 多平台支持
@@ -181,9 +231,9 @@ Commit message 语言从 git history 中自动推断，零配置即可用。优�
 | **Claude Code** | 通过 `.claude-plugin/marketplace.json` 注册，原生支持 SKILL.md |
 | **Cursor**      | 放入 `.cursor/skills/` 或项目级 skills 目录                    |
 | **Codex**       | 放入 `.codex/skills/` 目录                                     |
-| **其他**        | 通过 TypeScript CLI 直接运行：`bun scripts/main.ts --analyze`  |
+| **其他**        | 由 Agent 读取 SKILL.md；含脚本的技能按各自说明调用工具 |
 
-所有平台共享同一套 SKILL.md + scripts，无需针对特定平台做额外适配。
+各平台复用同一套 SKILL.md 与配套资源；具体技能发现方式、工具权限和运行依赖以平台及技能说明为准。纯指令技能没有独立的 TypeScript CLI 入口。
 
 ## License
 
