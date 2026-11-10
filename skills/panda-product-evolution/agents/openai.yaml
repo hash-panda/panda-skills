@@ -1,0 +1,4 @@
+interface:
+  display_name: "产品与系统持续改进"
+  short_description: "以证据驱动产品与系统双环改进，验证价值并积累下一轮可复用经验"
+  default_prompt: "使用 $panda-product-evolution 评审当前项目，选择最值得验证的执行或结构改进，并在已有授权范围内完成实施与验证。"

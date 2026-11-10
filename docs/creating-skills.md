@@ -16,16 +16,12 @@
 ---
 name: panda-<name>
 description: <第三人称描述。做什么 + 何时触发。>
-version: <语义化版本，与 marketplace.json 一致>
-metadata:
-  openclaw:
-    homepage: https://github.com/hash-panda/panda-skills#panda-<name>
-    requires:
-      anyBins:
-        - bun
-        - npx
 ---
 ```
+
+新技能以 `name` 和 `description` 作为可移植的基础元数据，不添加顶层 `version`。集合版本由 `.claude-plugin/marketplace.json` 中的 `metadata.version` 管理，并同步到 `panda-skills` 插件条目的 `version`；新增技能时更新集合版本，不连带修改其他技能的版本。
+
+平台专用元数据仅在实际需要且目标格式支持时添加。不要为纯指令技能声明 Bun / npx 运行依赖。现有技能的历史字段暂时保留；现有 ClawHub 发布脚本读取顶层 `version`，因此发布采用新格式的技能前需先适配独立发布版本来源，不能用集合版号替代所有旧技能的独立版本。
 
 ## 步骤
 
@@ -34,7 +30,10 @@ metadata:
 3. 在 `skills/panda-<name>/prompts/` 中添加 prompt 模板（如需要）
 4. 在 `skills/panda-<name>/references/` 中添加参考文档（如需要）
 5. 在 `.claude-plugin/marketplace.json` 中注册技能
-6. 更新 README.md
+6. 按需在 `assets/` 中添加供项目复用的模板，在 `agents/` 中添加平台支持的界面元数据
+7. 更新 README.md、集合版本和相关使用说明
+
+纯指令技能可以只有 `SKILL.md`，或配合参考文档与模板，不需要创建 `scripts/`。例如 `panda-product-evolution` 提供双环改进方法和实验模板，由 Agent 使用项目已有工具执行。
 
 ## Script Directory 模板
 
@@ -74,11 +73,13 @@ metadata:
 ```text
 skills/panda-example/
 ├── SKILL.md              # 主指令文档（<500 行）
-├── references/
+├── references/           # 可选：按需读取的参考资料
 │   ├── styles.md         # 按需加载
 │   └── examples.md       # 按需加载
-├── prompts/
+├── assets/               # 可选：项目配置、实验记录等模板
+│   └── project.template.md
+├── prompts/              # 可选
 │   └── template.md       # Prompt 模板
-└── scripts/
+└── scripts/              # 可选：纯指令技能无需此目录
     └── main.ts           # CLI 入口
 ```

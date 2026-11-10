@@ -4,18 +4,20 @@
     "name": "hash-panda"
   },
   "metadata": {
-    "description": "日常开发中可复用的 Agent Skills，包含智能 Git Commit Message 生成等技能",
-    "version": "1.0.0"
+    "description": "日常开发中可复用的 Agent Skills，包含产品与系统持续改进、智能 Git Commit Message 生成和文章配图",
+    "version": "1.1.0"
   },
   "plugins": [
     {
       "name": "panda-skills",
-      "description": "日常开发中可复用的 Agent Skills：智能 Git Commit Message 生成、文章智能配图（含角色融合）",
+      "version": "1.1.0",
+      "description": "日常开发中可复用的 Agent Skills：产品与系统持续改进、智能 Git Commit Message 生成、文章智能配图（含角色融合）",
       "source": "./",
       "strict": true,
       "skills": [
         "./skills/panda-git-commit",
-        "./skills/panda-article-illustrator"
+        "./skills/panda-article-illustrator",
+        "./skills/panda-product-evolution"
       ]
     }
   ]
